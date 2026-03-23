@@ -11,15 +11,15 @@ export class UserController {
   }
   @Get('users')
   findAll() {
-    return this.userService.findAll()
+    return this.userService.findAll();
   }
   @Get()
-  findOne(@Param("id") id: string, @Query("fields") fields?: string) {
-    return this.userService.findOne(id, fields)
+  findOne(@Param('id') id: string, @Query('fields') fields?: string) {
+    return this.userService.findOne(id, fields);
   }
 
   @Post()
-  create(@Body()create: createUserDto) {
-    return this.userService.create(create)
+  create(@Body() create: createUserDto) {
+    return this.userService.create(create);
   }
 }
