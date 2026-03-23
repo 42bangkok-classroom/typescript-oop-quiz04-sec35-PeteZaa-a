@@ -31,11 +31,11 @@ export class UserService {
     }
 
     const fieldList = fields.split(',');
-    const result:Partial<IUser> = {};
+    const result: Partial<IUser> = {};
 
-    fieldList.forEach((f) => {
-      if (findOne[f] !== undefined) {
-        result[f] = findOne[f];
+    fieldList.forEach((field) => {
+      if (findOne[field as keyof IUser] !== undefined) {
+        result[field as keyof IUser] = findOne[field as keyof IUser];
       }
     });
     return result;
