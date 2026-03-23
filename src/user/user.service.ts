@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -19,7 +18,10 @@ export class UserService {
 
   async findAll(): Promise<IUser[]> {
     const data = await fs.readFile(this.dataPath, 'utf8');
-    return JSON.parse(data);
+    if (!data) {
+      return []
+    }
+    return JSON.parse(data) as IUser[];
   }
 
   async findOne(id: string, fields?: string): Promise<Partial<IUser>> {
@@ -51,11 +53,7 @@ export class UserService {
 
     data.push(newUser);
     const data2 = fs.writeFile(this.dataPath, JSON.stringify(data, null, 2));
-    try {
-      await data2;
-      return newUser;
-    } catch (e) {
-      throw new BadRequestException;
-    }
+    await data2;
+    return newUser;
   }
 }
