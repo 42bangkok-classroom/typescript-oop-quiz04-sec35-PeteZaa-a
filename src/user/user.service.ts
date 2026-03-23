@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { IUser } from './user.interface';
-import * as fs from 'fs/promises';
+import * as fs from 'fs';
 import { join } from 'path';
 import { createUserDto } from './dto/create-user.dto';
 
@@ -12,16 +12,16 @@ export class UserService {
 
   private readonly dataPath = join(process.cwd(), 'data', 'users.json');
 
-  async findAll(): Promise<IUser[]> {
-    const data = await fs.readFile(this.dataPath, 'utf8');
+  findAll(): IUser[] {
+    const data = fs.readFileSync(this.dataPath, 'utf8');
     if (!data) {
       return [];
     }
     return JSON.parse(data) as IUser[];
   }
 
-  async findOne(id: string, fields?: string): Promise<Partial<IUser>> {
-    const data = await this.findAll();
+  findOne(id: string, fields?: string): Partial<IUser> {
+    const data = this.findAll();
     const findOne = data.find((e) => e.id === id);
     if (!findOne) {
       throw new NotFoundException('User not found');
@@ -41,15 +41,14 @@ export class UserService {
     return result;
   }
 
-  async create(dto: createUserDto) {
-    const data = await this.findAll();
+  create(dto: createUserDto) {
+    const data = this.findAll();
 
     const newID = String(data.length + 1);
     const newUser = { id: newID, ...dto };
 
     data.push(newUser);
-    const data2 = fs.writeFile(this.dataPath, JSON.stringify(data, null, 2));
-    await data2;
+    fs.writeFileSync(this.dataPath, JSON.stringify(data, null, 2), 'utf8');
     return newUser;
   }
 }
