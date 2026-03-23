@@ -10,7 +10,7 @@ export class UserService {
     return [];
   }
 
-  private readonly dataPath = join(process.cwd(), 'data/users.json');
+  private readonly dataPath = join(process.cwd(), 'data', 'users.json');
 
   async findAll(): Promise<IUser[]> {
     const data = await fs.readFile(this.dataPath, 'utf8');
