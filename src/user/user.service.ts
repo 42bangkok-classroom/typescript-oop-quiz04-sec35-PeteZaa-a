@@ -1,12 +1,8 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { IUser } from './user.interface';
 import * as fs from 'fs/promises';
 import { join } from 'path';
 import { createUserDto } from './dto/create-user.dto';
-
 
 @Injectable()
 export class UserService {
@@ -19,7 +15,7 @@ export class UserService {
   async findAll(): Promise<IUser[]> {
     const data = await fs.readFile(this.dataPath, 'utf8');
     if (!data) {
-      return []
+      return [];
     }
     return JSON.parse(data) as IUser[];
   }
@@ -35,7 +31,7 @@ export class UserService {
     }
 
     const fieldList = fields.split(',');
-    const result = {};
+    const result:Partial<IUser> = {};
 
     fieldList.forEach((f) => {
       if (findOne[f] !== undefined) {
