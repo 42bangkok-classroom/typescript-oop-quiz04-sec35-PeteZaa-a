@@ -20,20 +20,19 @@ export class UserService {
     return JSON.parse(data) as IUser[];
   }
 
-  findOne(id: string, fields?: string): Partial<IUser> {
+  findOne(id: string, fields?: string[]): Partial<IUser> {
     const data = this.findAll();
     const findOne = data.find((e) => e.id === id);
     if (!findOne) {
       throw new NotFoundException('User not found');
     }
-    if (!fields) {
+    if (fields === undefined) {
       return findOne;
     }
 
-    const fieldList = fields.split(',');
     const result: Partial<IUser> = {};
 
-    fieldList.forEach((field) => {
+    fields.forEach((field) => {
       if (findOne[field as keyof IUser] !== undefined) {
         result[field as keyof IUser] = findOne[field as keyof IUser];
       }

@@ -28,7 +28,8 @@ export class UserController {
     @Param('id') id: string,
     @Query('fields') fields?: string,
   ): Partial<IUser> {
-    return this.userService.findOne(id, fields);
+    const fieldArray = fields ? fields.split(',') : undefined;
+    return this.userService.findOne(id, fieldArray);
   }
   @Post()
   @UsePipes(new ValidationPipe())
