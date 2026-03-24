@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { createUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import type { IUser } from './user.interface';
 
 @Controller('users')
@@ -10,8 +10,8 @@ export class UserController {
   test() {
     return this.userService.test();
   }
-  @Get('users')
-  findAll() {
+  @Get()
+  findAll(): IUser[] {
     return this.userService.findAll();
   }
   @Get(':id')
@@ -21,9 +21,9 @@ export class UserController {
   ): Partial<IUser> {
     return this.userService.findOne(id, fields);
   }
-
   @Post()
-  create(@Body() create: createUserDto): IUser {
-    return this.userService.create(create);
+  @UsePipes(new ValidationPipe())
+  create(@Body() dto: CreateUserDto): IUser {
+    return this.userService.create(dto);
   }
 }
